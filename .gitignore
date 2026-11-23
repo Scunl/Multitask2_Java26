@@ -1,1 +1,5 @@
 .class
+_MACOSX
+.project
+.DS_Store
+.classpath
