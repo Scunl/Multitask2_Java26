@@ -13,10 +13,12 @@ import multitask2.model.Game;
 import multitask2.model.Model;
 import multitask2.model.games.Balance;
 import multitask2.model.games.Avoid;
+import multitask2.model.games.Fly;
 import multitask2.view.GeneralView;
 import multitask2.view.Viewers;
 import multitask2.view.games.AvoidView;
 import multitask2.view.games.BalanceView;
+import multitask2.view.games.FlyView;
 import multitask2.view.games.GameView;
 
 /**
@@ -97,12 +99,12 @@ public final class Main {
 		Event event;
 		while ((event = context.pollEvent()) != null) {
 			var action = switch (menu) {
-			case HOME -> {
-				yield handleHomeClick(event, w, h);
-			}
-			case GAME_OVER -> {
-				yield handleGameOverClick(event, w, h, menu);
-			}
+				case HOME -> {
+					yield handleHomeClick(event, w, h);
+				}
+				case GAME_OVER -> {
+					yield handleGameOverClick(event, w, h, menu);
+				}
 			};
 			if (action != Action.NONE)
 				return action;
@@ -114,39 +116,35 @@ public final class Main {
 		Rectangle start = new Rectangle(w / 2 - 50, h / 2 - 30, 100, 40);
 		Rectangle exit = new Rectangle(w / 2 - 50, h / 2 + 30, 100, 40);
 		switch (e) {
-		case PointerEvent pe -> {
-			int x = pe.location().x();
-			int y = pe.location().y();
-
-			if (start.contains(x, y))
-				return Action.START;
-			if (exit.contains(x, y))
-				return Action.EXIT;
-		}
-		default -> {
-		}
-		}
-		;
+			case PointerEvent pe -> {
+				int x = pe.location().x();
+				int y = pe.location().y();
+	
+				if (start.contains(x, y))
+					return Action.START;
+				if (exit.contains(x, y))
+					return Action.EXIT;
+			}
+			default -> {}
+		};
 		return Action.NONE;
 	}
 
 	private static Action handleGameOverClick(Event e, int w, int h, Type menu) {
 		switch (e) {
-		case PointerEvent pe -> {
-			int x = pe.location().x();
-			int y = pe.location().y();
-
-			if (x > w - 300 && y > h - 100) {
-				menu = Type.HOME;
-				return Action.NONE;
+			case PointerEvent pe -> {
+				int x = pe.location().x();
+				int y = pe.location().y();
+	
+				if (x > w - 300 && y > h - 100) {
+					menu = Type.HOME;
+					return Action.NONE;
+				}
+				if (x < 200 && y > h - 100)
+					return Action.EXIT;
 			}
-			if (x < 200 && y > h - 100)
-				return Action.EXIT;
-		}
-		default -> {
-		}
-		}
-		;
+			default -> {}
+		};
 		return Action.NONE;
 	}
 
@@ -163,6 +161,7 @@ public final class Main {
 		var viewers = new Viewers();
 		addGame(model, viewers, new Balance(), 0, BalanceView::new);
 		addGame(model, viewers, new Avoid(), 5, AvoidView::new);
+		addGame(model, viewers, new Fly(), 0, FlyView::new);
 
 		var view = new GeneralView(context, viewers);
 		var controller = new Controller(model, view, context);
