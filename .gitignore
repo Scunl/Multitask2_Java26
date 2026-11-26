@@ -3,3 +3,4 @@ _MACOSX
 .project
 .DS_Store
 .classpath
+/bin/
