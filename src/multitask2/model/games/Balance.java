@@ -35,6 +35,7 @@ public final class Balance implements Game {
   private double speed;
   /** Inclinaison actuelle de la planche, en degrés. */
   private double tilt;
+  private static final double RETURN_SPEED_DEG_PER_SEC = 45;
 
   /**
    * Crée un jeu avec la bille au centre, immobile, et une planche horizontale.
@@ -42,7 +43,7 @@ public final class Balance implements Game {
   public Balance() {
     position = 0;
     speed = 0;
-    tilt = 0;
+    tilt = 0.5;
     super();
   }
 

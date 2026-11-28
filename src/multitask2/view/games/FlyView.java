@@ -37,8 +37,8 @@ public final class FlyView implements GameView {
   public void render(Graphics2D graphics, Rectangle area) {
     GameView.checkInput(graphics, flyer, area);
 
-    var scaleX = area.width / Fly.WIDTH;
-    var scaleY = area.height / Fly.HEIGHT;
+    var scaleX = area.width / Fly.getWidth();
+    var scaleY = area.height / Fly.getHeight();
 
     // Dessin du fond
     graphics.setColor(new Color(25, 30, 55));

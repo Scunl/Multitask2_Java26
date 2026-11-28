@@ -20,29 +20,15 @@ import com.github.forax.zen.KeyboardEvent.Key;
  */
 public final class Fly implements Game {
 
-  /** Largeur de la zone de jeu. */
-  public static final double WIDTH = 100;
+  private static final double WIDTH = 100;
 
-  /** Hauteur de la zone de jeu. */
-  public static final double HEIGHT = 100;
-
-  /** Position horizontale fixe du joueur. */
+  private static final double HEIGHT = 100;
   private static final double PLAYER_X = 15;
-
-  /** Taille du joueur. */
   private static final double PLAYER_SIZE = 5;
-
-  /** Vitesse verticale du joueur lorsqu'il monte. */
   private static final double FLY_SPEED = 35;
-
-  /** Force de gravité lorsque le joueur ne vole pas. */
-  private static final double GRAVITY = 30;
-
-  /** Vitesse initiale des obstacles. */
+  private static final double GRAVITY = 65;
   private static final double BASE_OBSTACLE_SPEED = 30;
-
-  /** Intervalle initial entre deux obstacles. */
-  private static final double BASE_SPAWN_INTERVAL = 2;
+  private static final double BASE_SPAWN_INTERVAL = 4;
 
   /**
    * Obstacle rectangulaire se déplaçant de droite à gauche.
@@ -62,26 +48,21 @@ public final class Fly implements Game {
     }
   }
 
-  /** Position verticale du joueur. */
   private double playerY;
 
-  /** Vitesse verticale du joueur. */
   private double velocityY;
 
-  /** Liste des obstacles présents dans le jeu. */
   private final List<Obstacle> obstacles;
 
-  /** Générateur aléatoire. */
   private final Random random;
 
-  /** Temps restant avant la prochaine apparition. */
   private double spawnTimer;
 
   /**
    * Initialise le jeu avec le joueur au milieu de l'écran.
    */
   public Fly() {
-    playerY = HEIGHT / 2;
+    playerY = getHeight() / 2;
     velocityY = 0;
 
     obstacles = new ArrayList<>();
@@ -127,7 +108,7 @@ public final class Fly implements Game {
     // Empêche le joueur de sortir de l'écran.
     playerY = Math.max(
     	    PLAYER_SIZE / 2,
-    	    Math.min(HEIGHT - PLAYER_SIZE / 2, playerY)
+    	    Math.min(getHeight() - PLAYER_SIZE / 2, playerY)
     	);
   }
 
@@ -138,8 +119,8 @@ public final class Fly implements Game {
   private void spawnObstacles(double dt, double difficulty) {
 
     double spawnInterval = Math.max(
-        0.6,
-        BASE_SPAWN_INTERVAL - difficulty * 0.15
+        2,
+        BASE_SPAWN_INTERVAL - difficulty
     );
 
     spawnTimer -= dt;
@@ -152,10 +133,10 @@ public final class Fly implements Game {
 
       // Position verticale aléatoire.
       double obstacleY = random.nextDouble()
-          * (HEIGHT - obstacleHeight);
+          * (getHeight() - obstacleHeight);
 
       obstacles.add(new Obstacle(
-          WIDTH,
+          getWidth(),
           obstacleY,
           obstacleWidth,
           obstacleHeight
@@ -212,5 +193,13 @@ public final class Fly implements Game {
    */
   public List<Obstacle> obstacles() {
     return Collections.unmodifiableList(obstacles);
+  }
+
+  public static double getWidth() {
+    return WIDTH;
+  }
+
+  public static double getHeight() {
+    return HEIGHT;
   }
 }

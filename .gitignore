@@ -4,3 +4,4 @@ _MACOSX
 .DS_Store
 .classpath
 /bin/
+.metadata

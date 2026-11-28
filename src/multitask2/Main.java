@@ -6,6 +6,8 @@ import java.util.function.Function;
 import com.github.forax.zen.Application;
 import com.github.forax.zen.ApplicationContext;
 import com.github.forax.zen.Event;
+import com.github.forax.zen.KeyboardEvent;
+import com.github.forax.zen.KeyboardEvent.Key;
 import com.github.forax.zen.PointerEvent;
 
 import multitask2.controller.Controller;
@@ -81,10 +83,12 @@ public final class Main {
 		var viewers = new Viewers();
 		var view = new GeneralView(context, viewers);
 		var screen = context.getScreenInfo();
+		int select = 0;
 		Type menu = Type.HOME;
 		while (true) {
 		  renderMenu(context, view, menu);
 			var action = pollEvents(context, screen.width(), screen.height(), menu);
+			
 			if (action == Action.START) {
 				menu = game(context) ? Type.HOME : Type.GAME_OVER;
 			}
@@ -100,7 +104,7 @@ public final class Main {
 		while ((event = context.pollEvent()) != null) {
 			var action = switch (menu) {
 				case HOME -> {
-					yield handleHomeClick(event, w, h);
+					yield handleHomeEvent(event, w, h);
 				}
 				case GAME_OVER -> {
 					yield handleGameOverClick(event, w, h, menu);
@@ -112,7 +116,7 @@ public final class Main {
 		return Action.NONE;
 	}
 
-	private static Action handleHomeClick(Event e, int w, int h) {
+	private static Action handleHomeEvent(Event e, int w, int h) {
 		Rectangle start = new Rectangle(w / 2 - 50, h / 2 - 30, 100, 40);
 		Rectangle exit = new Rectangle(w / 2 - 50, h / 2 + 30, 100, 40);
 		switch (e) {
@@ -125,6 +129,15 @@ public final class Main {
 				if (exit.contains(x, y))
 					return Action.EXIT;
 			}
+//			case KeyboardEvent ke -> {
+//			  if (ke.action() == KeyboardEvent.Action.KEY_PRESSED) {
+//			    if (ke.key() == Key.UP) {
+//			      
+//			    } else if (ke.key() == Key.DOWN) {
+//			      
+//			    }
+//			  }
+//			}
 			default -> {}
 		};
 		return Action.NONE;
@@ -138,7 +151,7 @@ public final class Main {
 	
 				if (x > w - 300 && y > h - 100) {
 					menu = Type.HOME;
-					return Action.NONE;
+					return Action.START;
 				}
 				if (x < 200 && y > h - 100)
 					return Action.EXIT;
@@ -159,8 +172,8 @@ public final class Main {
 	private static boolean game(ApplicationContext context) {
 		var model = new Model();
 		var viewers = new Viewers();
-		addGame(model, viewers, new Balance(), 0, BalanceView::new);
-		addGame(model, viewers, new Avoid(), 5, AvoidView::new);
+//	 	addGame(model, viewers, new Balance(), 0, BalanceView::new);
+//		addGame(model, viewers, new Avoid(), 5, AvoidView::new);
 		addGame(model, viewers, new Fly(), 0, FlyView::new);
 
 		var view = new GeneralView(context, viewers);

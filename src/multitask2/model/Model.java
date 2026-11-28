@@ -71,10 +71,11 @@ public final class Model {
       throw new IllegalArgumentException("Time difference cannot be negative.");
     }
     Objects.requireNonNull(input);
-
     elapsedTime += dt;
     var difficulty = elapsedTime / 5;
-
+    if (difficulty > 7) {
+      difficulty = 7;
+    }
     for (var slot : slots) {
       if (!slot.active() && elapsedTime >= slot.activationTime()) {
         slot.start();
@@ -82,6 +83,7 @@ public final class Model {
       if (slot.active()) {
         if (!slot.game().update(dt, input, difficulty)) {
           return false;
+
         }
       }
     }
